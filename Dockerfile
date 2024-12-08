@@ -2,14 +2,9 @@ FROM ubuntu:22.04
 
 WORKDIR /work
 
-COPY ./src .
-
 # Install basic tools
 RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y build-essential
-RUN apt-get install -y fish
-RUN apt-get install -y git vim tmux
+RUN apt-get install -y build-essential curl fish git tmux vim
 
 # Vim plugin manager
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -17,4 +12,4 @@ RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 
 # Tool config setup
 RUN git clone https://github.com/WillyXie/cfg-setup.git
-RUN cp cfg-setup/.vimrc ~/
+RUN cd cfg-setup/; chmod +x ./setup.sh; ./setup.sh
