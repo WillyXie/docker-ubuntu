@@ -35,6 +35,6 @@ EXPOSE 3389
 
 # SSH key share
 RUN mkdir -p /root/.ssh
-RUN chmod 600 /root/.ssh/id_rsa
+RUN chmod -R 600 /root/.ssh/
 
 CMD service xrdp start ; bash
