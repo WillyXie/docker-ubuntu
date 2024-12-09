@@ -33,4 +33,8 @@ export XDG_CONFIG_DIRS=/etc/xdg/xdg-Lubuntu:/etc/xdg\\n\
 
 EXPOSE 3389
 
+# SSH key share
+RUN mkdir -p /root/.ssh
+RUN chmod 600 /root/.ssh/id_rsa
+
 CMD service xrdp start ; bash
