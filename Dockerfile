@@ -66,5 +66,8 @@ RUN chmod +x /etc/shadow-maint/useradd-post.d/useradd-post.sh
 RUN useradd -m user -p $(openssl passwd 1234)
 RUN usermod -aG sudo user
 
+# Install tools for building iverilog
+RUN sudo apt-get install -y autoconf bison flex gperf
+
 # Default command during container start
 CMD service xrdp start ; bash

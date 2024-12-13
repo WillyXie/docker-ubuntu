@@ -1,1 +1,1 @@
-docker exec -it basic /bin/fish
+docker exec -it n2nic /bin/fish
