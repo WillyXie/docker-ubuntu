@@ -10,7 +10,7 @@ You can follow these steps to bring it up, or just change corresponding commands
 
 - CLI command
     ```bash
-    $ docker build -t ubuntu-basic .
+    $ docker build --build-arg BUILD_VER=$(Get-Date -Format "MM/dd/yyyy HH:mm K") -t ubuntu-basic .
     $ docker run -v ${env:USERPROFILE}\.ssh:/root/.ssh:ro -v ${PSScriptRoot}\workspace:/home/user/workspace -p 3389:3389 --name basic -td ubuntu-basic /bin/bash
     $ docker exec -it basic /bin/bash
     ```
