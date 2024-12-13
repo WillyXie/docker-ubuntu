@@ -1,27 +1,34 @@
 FROM ubuntu:24.04
 
-WORKDIR /work
+WORKDIR /docker_workspace
+RUN mkdir -p ~/workspace
 
-# Install basic tools
 RUN apt-get update
+# XRDP install
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lubuntu-desktop xrdp
+# Some basic tools for development
 RUN apt-get install -y build-essential curl fish git tmux vim
 
-# Vim plugin manager
-RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# Tool config setup
+# Install Vim plugin manager for users
 RUN git clone https://github.com/WillyXie/cfg-setup.git
-RUN cd cfg-setup/; chmod +x ./setup.sh; ./setup.sh
+RUN chmod +x /docker_workspace/cfg-setup/setup.sh
+RUN mkdir -p /etc/shadow-maint/useradd-post.d
+RUN echo \
+"#!/usr/bin/bash\n\
+echo \"Post useradd script for \${SUBJECT}\n\"\n\
+sudo -i -u \${SUBJECT} bash << EOF\n\
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim\n\
+cd /docker_workspace/cfg-setup/; chmod +x ./setup.sh; ./setup.sh\n\
+EOF"\
+> /etc/shadow-maint/useradd-post.d/useradd-post.sh
+RUN chmod +x /etc/shadow-maint/useradd-post.d/useradd-post.sh
 
-# RDP
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lubuntu-desktop
+# Setup XRDP environment
 RUN rm -f /run/reboot-required*
 
 RUN useradd -m user -p $(openssl passwd 1234)
 RUN usermod -aG sudo user
-
-RUN apt-get install -y xrdp
 RUN adduser xrdp ssl-cert
 
 RUN sed -i '3 a echo "\
@@ -37,4 +44,5 @@ EXPOSE 3389
 RUN mkdir -p /root/.ssh
 RUN chmod -R 600 /root/.ssh/
 
+# Default command during container start
 CMD service xrdp start ; bash

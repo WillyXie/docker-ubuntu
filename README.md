@@ -8,10 +8,10 @@ This project aims to create an ubuntu system based on Docker as a base supportin
 I use docker to build an Ubuntu 24.04 environment for development, and the docker engine is running on Windows OS.<br />
 You can follow these steps to bring it up, or just change corresponding commands to match your own machine if it's not Windows.
 
-- CLI commands
+- CLI command
     ```bash
     $ docker build -t ubuntu-basic .
-    $ docker run -v ${env:USERPROFILE}\.ssh:/root/.ssh:ro -v ${PSScriptRoot}\work:/work -p 3389:3389 --name basic -td ubuntu-basic /bin/bash
+    $ docker run -v ${env:USERPROFILE}\.ssh:/root/.ssh:ro -v ${PSScriptRoot}\workspace:/home/user/workspace -p 3389:3389 --name basic -td ubuntu-basic /bin/bash
     $ docker exec -it basic /bin/bash
     ```
 
@@ -22,8 +22,14 @@ You can follow these steps to bring it up, or just change corresponding commands
     ```
 
 ## Hints
-The docker system has XRDP support, so you can connect to the localhost:3389 for GUI desktop. But you'll need to connect into it and start the XRDP service first.
-```shell=
-$ docker exec -it basic /bin/bash
-$ service xrdp start
-```
+- XRDP
+
+    The docker system has XRDP support, so you can connect to the localhost:3389 for GUI desktop. But you'll need to connect into it and start the XRDP service first.
+    ```shell=
+    $ docker exec -it basic /bin/bash
+    $ service xrdp start
+    ```
+
+- Directory mount point
+
+    The example command and script for running container syncs `workspace` directory under project path to `/home/user/workspace` in container.
