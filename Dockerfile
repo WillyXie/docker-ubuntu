@@ -8,6 +8,22 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y lubuntu-desktop xrdp
 # Some basic tools for development
 RUN apt-get install -y build-essential curl fish git tmux vim
+# Install Firefox
+RUN install -d -m 0755 /etc/apt/keyrings
+RUN wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- |\
+    tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+RUN gpg -n -q --import --import-options import-show \
+    /etc/apt/keyrings/packages.mozilla.org.asc | \
+    awk '/pub/{getline; gsub(/^ +| +$/,""); print "\n"$0"\n"}'
+RUN echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] \
+    https://packages.mozilla.org/apt mozilla main" | \
+    tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+RUN echo "\
+Package: *\n\
+Pin: origin packages.mozilla.org\n\
+Pin-Priority: 1000\n\
+" | tee /etc/apt/preferences.d/mozilla
+RUN apt-get update && apt-get install -y --allow-downgrades firefox
 
 # Setup XRDP environment
 RUN rm -f /run/reboot-required*
@@ -30,13 +46,14 @@ RUN chmod -R 600 /root/.ssh/
 ARG BUILD_VER UNSET
 RUN echo $BUILD_VER > build_ver
 
-# Install Vim plugin manager for users
+# Setup tools for new users, VIM, tmux, etc.
 RUN git clone https://github.com/WillyXie/cfg-setup.git
 RUN chmod +x cfg-setup/setup.sh
 RUN mkdir -p /etc/shadow-maint/useradd-post.d
 RUN echo \
 "#!/usr/bin/bash\n\
 echo \"Post useradd script for \${SUBJECT}\n\"\n\
+sudo chsh -s /usr/bin/fish \${SUBJECT}\n\
 sudo -i -u \${SUBJECT} bash << EOF\n\
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim\n\
