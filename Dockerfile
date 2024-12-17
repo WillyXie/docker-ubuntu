@@ -24,6 +24,8 @@ Pin: origin packages.mozilla.org\n\
 Pin-Priority: 1000\n\
 " | tee /etc/apt/preferences.d/mozilla
 RUN apt-get update && apt-get install -y --allow-downgrades firefox
+# Install packages for Vue & dotnet
+RUN apt-get install -y dotnet-sdk-8.0 nodejs npm
 
 # Setup XRDP environment
 RUN rm -f /run/reboot-required*
