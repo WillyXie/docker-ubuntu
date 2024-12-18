@@ -34,8 +34,19 @@ export XDG_SESSION_TYPE=x11\\n\
 export XDG_CURRENT_DESKTOP=LXQT\\n\
 export XDG_CONFIG_DIRS=/etc/xdg/xdg-Lubuntu:/etc/xdg\\n\
 " > ~/.xsessionrc' /etc/xrdp/startwm.sh
-
 EXPOSE 3389
+
+# Install packages for QT
+RUN apt-get install -y cmake
+RUN apt-get install -y \
+    libgl-dev libegl-dev libfontconfig1-dev libinput-dev \
+    libfreetype-dev libx11-dev libx11-xcb-dev libxcb-cursor-dev \
+    libxcb-glx0-dev libxcb-icccm4-dev libxcb-image0-dev \
+    libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev \
+    libxcb-shape0-dev libxcb-shm0-dev libxcb-sync-dev libxcb-util-dev \
+    libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev \
+    libxcb1-dev libxext-dev libxfixes-dev libxi-dev libxkbcommon-dev \
+    libxkbcommon-x11-dev libxrender-dev
 
 # SSH key share
 RUN mkdir -p /root/.ssh

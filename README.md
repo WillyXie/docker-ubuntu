@@ -10,9 +10,9 @@ You can follow these steps to bring it up, or just change corresponding commands
 
 - CLI command
     ```bash
-    $ docker build --build-arg BUILD_VER=$(Get-Date -Format "MM/dd/yyyy HH:mm K") -t ubuntu-basic .
-    $ docker run -v ${env:USERPROFILE}\.ssh:/root/.ssh:ro -v ${PSScriptRoot}\sync:/home/user/sync -v volume-basic:/home/user/workspace -p 3389:3389 --name basic -td ubuntu-basic /bin/fish
-    $ docker exec -it basic /bin/fish
+    $ docker build --build-arg BUILD_VER=$(Get-Date -Format "MM/dd/yyyy HH:mm K") -t ubuntu-qt .
+    $ docker run -v ${env:USERPROFILE}\.ssh:/root/.ssh:ro -v ${PSScriptRoot}\sync:/home/user/sync -v volume-qt:/home/user/workspace -p 3389:3389 --name qt -td ubuntu-qt /bin/fish
+    $ docker exec -it qt /bin/fish
     ```
 
 - Pre-defined script for Windows
@@ -27,7 +27,7 @@ You can follow these steps to bring it up, or just change corresponding commands
 
     The docker system has XRDP support, so you can connect to the localhost:3389 for GUI desktop. But you'll need to connect into it and start the XRDP service first.
     ```shell=
-    $ docker exec -it basic /bin/fish
+    $ docker exec -it qt /bin/fish
     $ service xrdp start
     ```
 
@@ -35,4 +35,4 @@ You can follow these steps to bring it up, or just change corresponding commands
 
     The example command and script for running container syncs `sync` directory under project path to `/home/user/sync` in container. User can use it to sync files between host & container.
 
-    Another mount point is docker volume `volume-basic` to `/home/user/workspace`, it's managed by docker engine to avoid slow response time for file access when the size becomes too big.
+    Another mount point is docker volume `volume-qt` to `/home/user/workspace`, it's managed by docker engine to avoid slow response time for file access when the size becomes too big.

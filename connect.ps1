@@ -1,1 +1,1 @@
-docker exec -it basic /bin/fish
+docker exec -it qt /bin/fish
