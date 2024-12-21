@@ -24,6 +24,12 @@ Pin: origin packages.mozilla.org\n\
 Pin-Priority: 1000\n\
 " | tee /etc/apt/preferences.d/mozilla
 RUN apt-get update && apt-get install -y --allow-downgrades firefox
+# Install tools for building GTKWave
+RUN sudo apt install -y desktop-file-utils flex gperf libbz2-dev\
+                        libgirepository1.0-dev libgtk-3-dev libjudy-dev\
+                        meson tcl-dev tk-dev
+# Install tools for building Icarus Verilog
+RUN sudo apt-get install -y autoconf bison
 
 # Setup XRDP environment
 RUN rm -f /run/reboot-required*
@@ -65,9 +71,6 @@ RUN chmod +x /etc/shadow-maint/useradd-post.d/useradd-post.sh
 # Add an user here
 RUN useradd -m user -p $(openssl passwd 1234)
 RUN usermod -aG sudo user
-
-# Install tools for building iverilog
-RUN sudo apt-get install -y autoconf bison flex gperf
 
 # Default command during container start
 CMD service xrdp start ; bash
